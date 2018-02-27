@@ -3,3 +3,4 @@
 *.py[cod]
 *pycache*
 *cache*
+database

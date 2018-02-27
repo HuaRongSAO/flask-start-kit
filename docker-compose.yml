@@ -1,0 +1,18 @@
+version: '3.0'
+services:
+  mysql:
+    image: mysql:5.6
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: flask
+
+    volumes:
+    - './database/mysql:/var/lib/mysql'
+    ports:
+    - 3306:3306
+  mongo:
+    image: mongo
+    volumes:
+    - './database/mongo:/data/db'
+    ports:
+    - 27017:27017
