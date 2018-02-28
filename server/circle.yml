@@ -5,15 +5,15 @@ machine:
     python:
         version: 3.4.2
     environment:
-        PYTHONPATH: src:test
+        PYTHONPATH: application:test
         APPLICATION_POSTGRES_USER: ubuntu
         APPLICATION_POSTGRES_HOST: 127.0.0.1
         APPLICATION_POSTGRES_PORT: 5432
         APPLICATION_POSTGRES_DB: circle_test
 database:
     override:
-        - python src/manage.py db upgrade
+        - python application/manage.py db upgrade
 test:
     override:
-        - flake8 ./src ./test
+        - flake8 ./application ./test
         - python -m pytest --junitxml=$CIRCLE_TEST_REPORTS/junit/report.xml test/

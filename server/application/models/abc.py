@@ -6,10 +6,10 @@ from weakref import WeakValueDictionary
 from sqlalchemy import inspect
 from sqlalchemy.orm import aliased
 
-from . import db
+from application.app import mysql
 
 
-class MetaBaseModel(db.Model.__class__):
+class MetaBaseModel(mysql.Model.__class__):
     """ Define a metaclass for the BaseModel
         Implement `__getitem__` for managing aliases """
 
@@ -65,10 +65,10 @@ class BaseModel():
         }
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        mysql.session.add(self)
+        mysql.session.commit()
         return self
 
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        mysql.session.delete(self)
+        mysql.session.commit()

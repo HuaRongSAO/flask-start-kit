@@ -18,8 +18,6 @@ mongo = MongoEngine()
 mongo.init_app(app)
 
 mysql = SQLAlchemy(app)
-mysql.drop_all()
-mysql.create_all()
 
 manager = Manager(app)
 migrate = Migrate(app, mysql)
@@ -32,16 +30,44 @@ class User(mongo.Document):
 
 class Admin(mysql.Model):
     __tablename__ = 'admins'
-    id = mysql.Column(mysql.Integer, primary_key=True)
+    id = mysql.Column(mysql.Integer, primary_key=True, autoincrement=True)
     username = mysql.Column(mysql.String(80), unique=True)
     email = mysql.Column(mysql.String(320), unique=True)
     password = mysql.Column(mysql.String(32), nullable=False)
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
 
     def __repr__(self):
         return '<User %r>' % self.username
 
 
-manager.add_command('db', MigrateCommand)
+@app.route("/")
+def index():
+    for i in range(10):
+        User(name='user name : {}'.format(i), email='admin@qq.com').save()
+    users = User.objects()
+    return jsonify({"users": users})
+
+
+@app.route("/admin/<string:name>")
+def admin(name):
+    admimUser = Admin(username='admin_{}'.format(name), email='{}@qq.com'.format(name), password='1234')
+    mysql.session.add(admimUser)
+    mysql.session.commit()
+    admins = Admin.query.all()
+    print(admins)
+    list = []
+    for item in admins:
+        admin = {}
+        admin['name'] = item.username
+        admin['email'] = item.email
+        admin['password'] = item.password
+        list.append(admin)
+
+    return jsonify({"admins": list})
 
 if __name__ == "__main__":
-    manager.run()
+    app.run(host='127.0.0.1', port=5200, debug=True)

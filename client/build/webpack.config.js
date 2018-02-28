@@ -63,14 +63,14 @@ config.module.rules.push({
           'babel-plugin-transform-runtime',
           {
             helpers: true,
-            polyfill: false, // we polyfill needed features in src/normalize.js
+            polyfill: false, // we polyfill needed features in application/normalize.js
             regenerator: true,
           },
         ],
         [
           'babel-plugin-transform-object-rest-spread',
           {
-            useBuiltIns: true // we polyfill Object.assign in src/normalize.js
+            useBuiltIns: true // we polyfill Object.assign in application/normalize.js
           },
         ],
       ],
