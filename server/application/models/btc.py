@@ -1,4 +1,4 @@
-from application.app import mongo
+from application.extensions import mongo
 
 class BTC(mongo.Document):
     time = mongo.DateTimeField()

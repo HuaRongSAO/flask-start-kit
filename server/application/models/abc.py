@@ -6,7 +6,7 @@ from weakref import WeakValueDictionary
 from sqlalchemy import inspect
 from sqlalchemy.orm import aliased
 
-from application.app import mysql
+from application.extensions import mysql
 
 
 class MetaBaseModel(mysql.Model.__class__):

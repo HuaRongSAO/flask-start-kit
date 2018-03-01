@@ -1,73 +1,13 @@
-from flask import Flask, jsonify
-from flask_mongoengine import MongoEngine
-from flask_script import Manager, Shell
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate, MigrateCommand
+from flask import jsonify
+from application import create_app
 
-app = Flask(__name__)
+app = create_app()
+@app.errorhandler(404)
+def page_not_found(error):
+    return jsonify({'status': '404'})
 
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'flask',
-    'host': 'localhost',
-    'port': 27017
-}
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@127.0.0.1/flask'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+@app.errorhandler(500)
+def page_not_found(error):
+    return jsonify({'status': '500'})
 
-mongo = MongoEngine()
-mongo.init_app(app)
-
-mysql = SQLAlchemy(app)
-
-manager = Manager(app)
-migrate = Migrate(app, mysql)
-
-
-class User(mongo.Document):
-    name = mongo.StringField()
-    email = mongo.StringField()
-
-
-class Admin(mysql.Model):
-    __tablename__ = 'admins'
-    id = mysql.Column(mysql.Integer, primary_key=True, autoincrement=True)
-    username = mysql.Column(mysql.String(80), unique=True)
-    email = mysql.Column(mysql.String(320), unique=True)
-    password = mysql.Column(mysql.String(32), nullable=False)
-
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
-@app.route("/")
-def index():
-    for i in range(10):
-        User(name='user name : {}'.format(i), email='admin@qq.com').save()
-    users = User.objects()
-    return jsonify({"users": users})
-
-
-@app.route("/admin/<string:name>")
-def admin(name):
-    admimUser = Admin(username='admin_{}'.format(name), email='{}@qq.com'.format(name), password='1234')
-    mysql.session.add(admimUser)
-    mysql.session.commit()
-    admins = Admin.query.all()
-    print(admins)
-    list = []
-    for item in admins:
-        admin = {}
-        admin['name'] = item.username
-        admin['email'] = item.email
-        admin['password'] = item.password
-        list.append(admin)
-
-    return jsonify({"admins": list})
-
-if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5200, debug=True)
+app.run(debug=True)

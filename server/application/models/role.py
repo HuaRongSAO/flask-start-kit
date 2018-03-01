@@ -1,4 +1,4 @@
-from application.app import mysql
+from application.extensions import mysql
 from .abc import BaseModel
 
 
