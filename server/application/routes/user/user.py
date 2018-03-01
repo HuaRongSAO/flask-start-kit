@@ -5,8 +5,8 @@ from flask_restful import Resource, reqparse, marshal_with, fields
 from application.routes import api, meta_fields
 from application.models.user import User
 from application.util import InvalidUsage
-
-parser = reqparse.RequestParser()
+from sqlalchemy import or_
+from application.extensions import mysql
 
 # Marshaled field definitions for user objects
 user_fields = {
@@ -31,34 +31,78 @@ class UserController(Resource):
         for user in users:
             users_json.append(user.json)
         return {'users': users_json}
-
+    
     def post(self):
+        parser = reqparse.RequestParser()
         parser.add_argument('username', required=True, help='username 必填选项')
         parser.add_argument('password', required=True, help='password 必填选项')
         parser.add_argument('email', required=True, help='email 必填选项')
         parser.add_argument('phone')
-
+        
         args = parser.parse_args()
-        print(args)
         try:
             user = User(username=args['username'], email=args['email'],
                         phone=args['phone'], password=args['password']).save()
-        except Exception:
-            raise InvalidUsage('添加用户失败', status_code=500)
+        except Exception as e:
+            raise InvalidUsage('添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return {'user': user.json}
 
 
 class UserInfo(Resource):
     def get(self, query):
-        user = User.query.filter_by(username=query).first()
-        return jsonify({'success': 'success', 'user': user.json})
+        user = mysql.session.query(User).filter(
+            or_(User.id == query, User.username == query, User.email == query)).first()
+        if not user:
+            return jsonify({'status': 'fail', 'user': {}})
+        user_json = {
+            "id": user.json["id"],
+            "email": user.json["email"],
+            "phone": user.json["phone"],
+            "username": user.json["username"],
+        }
+        return jsonify({'status': 'success', 'user': user_json})
+    
+    def put(self, query):
+        parser = reqparse.RequestParser()
+        parser.add_argument('username')
+        parser.add_argument('password')
+        parser.add_argument('email')
+        parser.add_argument('phone')
+        
+        args = parser.parse_args()
+        print(args)
+        username = args['username']
+        password = args['password']
+        email = args['email']
+        phone = args['phone']
+        
+        user = User.query.filter(User.id == query).first()
+        if username != '':
+            user.username = username
+        if username != '':
+            user.password = password
+        if username != '':
+            user.email = email
+        if username != '':
+            user.phone = phone
+        try:
+            mysql.session.merge(user)
+            mysql.session.commit()
+        except Exception as e:
+            raise InvalidUsage('更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
+        return jsonify({'status': 'success', 'user': user.json})
+    
+    def delete(self, query):
+        user = User.query.filter(User.id == query).first()
+        if not user:
+            return jsonify({'status': 'fail', 'user': {}})
+        else:
+            try:
+                user.delete()
+            except Exception as e:
+                raise InvalidUsage('删除用户失败', status_code=500, payload={'error': '{}'.format(e)})
+        return jsonify({'status': 'success', 'user': user.json})
 
-    def put(self):
-        return {'hello': 'put'}
 
-    def delete(self):
-        return {'delete': 'delete'}
-
-
-api.add_resource(UserInfo, '/user/<string:query>')
+api.add_resource(UserInfo, '/user/<string:query>', '/user/<string:id>')
 api.add_resource(UserController, '/user')

@@ -4,3 +4,4 @@
 *pycache*
 *cache*
 database
+server/migrations

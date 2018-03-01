@@ -6,9 +6,12 @@ const webpackConfig = require('../build/webpack.config')
 const project = require('../project.config')
 const compress = require('compression')
 
+const proxyMiddleWare = require("http-proxy-middleware")
+const proxyPath = "http://127.0.0.1:5000"
+const proxyOption = {target: proxyPath, changeOrigoin: true}
 const app = express()
 app.use(compress())
-
+app.use("/api", proxyMiddleWare(proxyOption))
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------

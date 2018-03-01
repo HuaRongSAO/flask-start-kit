@@ -4,6 +4,7 @@
   "description": "Get started with React, Redux, and React-Router!",
   "main": "index.js",
   "scripts": {
+    "server": "node server/server.js",
     "clean": "rimraf dist",
     "compile": "node build/scripts/compile",
     "build": "npm run clean && cross-env NODE_ENV=production npm run compile",
@@ -23,6 +24,7 @@
     "bootstrap": "^4.0.0-alpha",
     "compression": "^1.6.2",
     "express": "^4.14.0",
+    "http-proxy-middleware": "^0.17.4",
     "object-assign": "^4.1.1",
     "promise": "^7.1.1",
     "prop-types": "^15.5.10",
