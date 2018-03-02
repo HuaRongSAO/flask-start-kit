@@ -1,11 +1,13 @@
 # encoding: utf-8
-import json
 from flask import jsonify
-from flask_restful import Resource, reqparse, marshal_with, fields
+from sqlalchemy import or_
+from flask_restful import Resource, reqparse, fields
+from flask_jwt import jwt_required
+from application.util import hash_encrypt
+
 from application.routes import api, meta_fields
 from application.models.user import User
 from application.util import InvalidUsage
-from sqlalchemy import or_
 from application.extensions import mysql
 
 # Marshaled field definitions for user objects
@@ -25,24 +27,26 @@ user_collection_fields = {
 
 
 class UserController(Resource):
+    @jwt_required()
     def get(self):
         users = User.query.all()
         users_json = []
         for user in users:
             users_json.append(user.json)
         return {'users': users_json}
-    
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('username', required=True, help='username 必填选项')
         parser.add_argument('password', required=True, help='password 必填选项')
         parser.add_argument('email', required=True, help='email 必填选项')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
+        password = hash_encrypt(bytes(args['password'], 'utf-8'))
         try:
             user = User(username=args['username'], email=args['email'],
-                        phone=args['phone'], password=args['password']).save()
+                        phone=args['phone'], password=password).save()
         except Exception as e:
             raise InvalidUsage('添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return {'user': user.json}
@@ -61,21 +65,21 @@ class UserInfo(Resource):
             "username": user.json["username"],
         }
         return jsonify({'status': 'success', 'user': user_json})
-    
+
     def put(self, query):
         parser = reqparse.RequestParser()
         parser.add_argument('username')
         parser.add_argument('password')
         parser.add_argument('email')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
         print(args)
         username = args['username']
         password = args['password']
         email = args['email']
         phone = args['phone']
-        
+
         user = User.query.filter(User.id == query).first()
         if username != '':
             user.username = username
@@ -91,7 +95,7 @@ class UserInfo(Resource):
         except Exception as e:
             raise InvalidUsage('更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return jsonify({'status': 'success', 'user': user.json})
-    
+
     def delete(self, query):
         user = User.query.filter(User.id == query).first()
         if not user:

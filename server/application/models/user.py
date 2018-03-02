@@ -13,7 +13,7 @@ class User(mysql.Model, BaseModel):
     username = mysql.Column(mysql.String(80), unique=True)
     email = mysql.Column(mysql.String(250), unique=True)
     phone = mysql.Column(mysql.String(11), unique=True)
-    password = mysql.Column(mysql.String(32), nullable=False)
+    password = mysql.Column(mysql.String(250), nullable=False)
 
     def __init__(self, username, email, phone, password):
         self.username = username

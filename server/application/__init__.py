@@ -2,13 +2,12 @@
 import logging
 from flask import Flask, current_app, jsonify
 from datetime import datetime
-
 from config import load_config
 from application.controllers import all_bp
 from application.extensions import login_manager, jwt, mongo, mysql, api
 from application.models import User
 from application.routes import api_blueprint
-from application.util import InvalidUsage
+from application.util import InvalidUsage, hash_encrypt
 
 
 def create_app():
@@ -43,13 +42,14 @@ def register_extensions(app):
     # jwt config
     def jwt_authenticate(username, password):
         logging.info("username:{}\npassword:{}\n".format(username, password))
-        user = User.objects(name=username, password=password).first()
+        hash_password = hash_encrypt(bytes(password, 'utf-8'))
+        user = User.query.filter_by(username=username, password=hash_password).first()
         return user
 
     def jwt_identity(payload):
         logging.info("payload:{}".format(payload))
         user_id = payload['identity']
-        return User.objects(id=user_id).first()
+        return User.query.filter_by(id=user_id).first()
 
     def make_payload(identity):
         iat = datetime.utcnow()

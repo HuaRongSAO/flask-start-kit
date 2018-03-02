@@ -7,7 +7,10 @@ class Config(object):
     # Flask app config
     DEBUG = False
     TESTING = False
+
+    PASSWORD_KEY = '消灭人类暴政,世界属于三体'
     SECRET_KEY = "sample_key"
+
     JWT_AUTH_USERNAME_KEY = "username"
     JWT_AUTH_PASSWORD_KEY = "password"
 
