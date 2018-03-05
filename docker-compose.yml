@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   mysql:
-    image: mysql:5.6
+    build: .
     environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: 'flask'

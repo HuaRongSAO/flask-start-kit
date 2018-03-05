@@ -2,9 +2,9 @@
 from flask import jsonify
 from sqlalchemy import or_
 from flask_restful import Resource, reqparse, fields
-from flask_jwt import jwt_required
-from application.util import hash_encrypt
+from flask_jwt import jwt_required, current_identity
 
+from application.util import hash_encrypt
 from application.routes import api, meta_fields
 from application.models.user import User
 from application.util import InvalidUsage
@@ -33,7 +33,11 @@ class UserController(Resource):
         users_json = []
         for user in users:
             users_json.append(user.json)
-        return {'users': users_json}
+        return {
+            "user": current_identity.json,
+            "promise_list": current_identity.promise_list,
+            'users': users_json
+        }
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -43,12 +47,12 @@ class UserController(Resource):
         parser.add_argument('phone')
 
         args = parser.parse_args()
-        password = hash_encrypt(bytes(args['password'], 'utf-8'))
+        password = hash_encrypt(args['password'])
         try:
             user = User(username=args['username'], email=args['email'],
                         phone=args['phone'], password=password).save()
         except Exception as e:
-            raise InvalidUsage('添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
+            raise InvalidUsage(message='添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return {'user': user.json}
 
 
@@ -93,7 +97,7 @@ class UserInfo(Resource):
             mysql.session.merge(user)
             mysql.session.commit()
         except Exception as e:
-            raise InvalidUsage('更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
+            raise InvalidUsage(message='更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return jsonify({'status': 'success', 'user': user.json})
 
     def delete(self, query):
@@ -104,7 +108,7 @@ class UserInfo(Resource):
             try:
                 user.delete()
             except Exception as e:
-                raise InvalidUsage('删除用户失败', status_code=500, payload={'error': '{}'.format(e)})
+                raise InvalidUsage(message='删除用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return jsonify({'status': 'success', 'user': user.json})
 
 
