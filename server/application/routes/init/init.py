@@ -3,10 +3,7 @@ from flask import jsonify
 from flask_restful import Resource
 
 from application.util import hash_encrypt, now_datetime
-from application.models import Promise
-from application.models import User
-from application.models import UserAndRole
-from application.models import Role
+from application.models import Promise, UserAndRole, User, Role
 
 
 class Init(Resource):

@@ -1,29 +1,15 @@
 # encoding: utf-8
 from flask import jsonify
 from sqlalchemy import or_
-from flask_restful import Resource, reqparse, fields
+from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from application.util import hash_encrypt
-from application.routes import api, meta_fields
+from application.routes import api
 from application.models.user import User
 from application.util import InvalidUsage
 from application.extensions import mysql
 
-# Marshaled field definitions for user objects
-user_fields = {
-    'id': fields.Integer,
-    'username': fields.String,
-    'email': fields.String,
-    'phone': fields.String,
-    'password': fields.String,
-}
-
-# Marshaled field definitions for collections of user objects
-user_collection_fields = {
-    'items': fields.List(fields.Nested(user_fields)),
-    'meta': fields.Nested(meta_fields),
-}
 
 
 class UserController(Resource):
