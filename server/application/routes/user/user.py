@@ -7,21 +7,21 @@ from flask_jwt import jwt_required, current_identity
 from application.util import hash_encrypt
 from application.routes import api
 from application.models.user import User
-from application.util import InvalidUsage
+from application.util import InvalidUsage, promise_required
 from application.extensions import mysql
-
 
 
 class UserController(Resource):
     @jwt_required()
+    @promise_required
     def get(self):
         users = User.query.all()
         users_json = []
         for user in users:
             users_json.append(user.json)
         return {
-            "user": current_identity.json,
-            "promise_list": current_identity.promise_list,
+            "user": current_identity.json if current_identity else {},
+            "promise_list": current_identity.promise_list if current_identity else {},
             'users': users_json
         }
 

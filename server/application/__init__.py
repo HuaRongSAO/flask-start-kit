@@ -1,6 +1,6 @@
 # encoding: utf-8
 import logging
-from flask import Flask, current_app, jsonify
+from flask import Flask, current_app, jsonify, request
 from datetime import datetime
 from config import load_config
 from application.blueprints import all_bp
@@ -21,6 +21,9 @@ def create_app():
     configure_logging(app)
     register_extensions(app)
     register_blueprint(app)
+
+    # 拦截器
+    before_request(app)
 
     # 异常捕获
     exception_controller(app)
@@ -90,3 +93,12 @@ def exception_controller(app):
         response = jsonify(error.to_dict())
         response.status_code = error.status_code
         return response
+
+
+def before_request(app):
+    @app.before_request
+    def before_request():
+        ip = request.remote_addr
+        url = request.url
+        print(ip)
+        print(url)
