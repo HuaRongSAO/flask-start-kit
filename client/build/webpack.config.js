@@ -39,7 +39,7 @@ const config = {
   },
   plugins: [
     new webpack.DefinePlugin(Object.assign({
-      'process.env': { NODE_ENV: JSON.stringify(project.env) },
+      'process.env': {NODE_ENV: JSON.stringify(project.env)},
       __DEV__,
       __TEST__,
       __PROD__,
@@ -47,6 +47,16 @@ const config = {
   ],
 }
 
+const options = [
+  {
+    'libraryName': 'antd',
+    'libraryDirectory': 'lib',   // default: lib
+    'style': 'css'
+  },
+  {
+    'libraryName': 'antd-mobile'
+  },
+]
 // JavaScript
 // ------------------------------------
 config.module.rules.push({
@@ -73,6 +83,8 @@ config.module.rules.push({
             useBuiltIns: true // we polyfill Object.assign in application/normalize.js
           },
         ],
+        ['import', options]
+      
       ],
       presets: [
         'babel-preset-react',
@@ -82,7 +94,7 @@ config.module.rules.push({
             ie9: true,
           },
           uglify: true,
-        }],
+        }]
       ]
     },
   }],
@@ -97,7 +109,7 @@ const extractStyles = new ExtractTextPlugin({
 })
 
 config.module.rules.push({
-  test: /\.(sass|scss)$/,
+  test: /\.(sass|scss|css)$/,
   loader: extractStyles.extract({
     fallback: 'style-loader',
     use: [
@@ -112,7 +124,7 @@ config.module.rules.push({
               browsers: ['last 2 versions'],
             },
             discardComments: {
-              removeAll : true,
+              removeAll: true,
             },
             discardUnused: false,
             mergeIdents: false,
@@ -139,10 +151,10 @@ config.plugins.push(extractStyles)
 // Images
 // ------------------------------------
 config.module.rules.push({
-  test    : /\.(png|jpg|gif)$/,
-  loader  : 'url-loader',
-  options : {
-    limit : 8192,
+  test: /\.(png|jpg|gif)$/,
+  loader: 'url-loader',
+  options: {
+    limit: 8192,
   },
 })
 
@@ -158,13 +170,13 @@ config.module.rules.push({
 ].forEach((font) => {
   const extension = font[0]
   const mimetype = font[1]
-
+  
   config.module.rules.push({
-    test    : new RegExp(`\\.${extension}$`),
-    loader  : 'url-loader',
-    options : {
-      name  : 'fonts/[name].[ext]',
-      limit : 10000,
+    test: new RegExp(`\\.${extension}$`),
+    loader: 'url-loader',
+    options: {
+      name: 'fonts/[name].[ext]',
+      limit: 10000,
       mimetype,
     },
   })
@@ -196,12 +208,12 @@ if (__DEV__) {
 // ------------------------------------
 if (!__TEST__) {
   const bundles = ['normalize', 'manifest']
-
+  
   if (project.vendors && project.vendors.length) {
     bundles.unshift('vendor')
     config.entry.vendor = project.vendors
   }
-  config.plugins.push(new webpack.optimize.CommonsChunkPlugin({ names: bundles }))
+  config.plugins.push(new webpack.optimize.CommonsChunkPlugin({names: bundles}))
 }
 
 // Production Optimizations

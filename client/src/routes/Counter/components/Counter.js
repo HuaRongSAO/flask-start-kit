@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const getUser = async () => {
+   console.log('click')
   const user = await fetch('/api/user')
-  
+
   console.log(user)
 }
 export const Counter = ({counter, increment, doubleAsync}) => (
