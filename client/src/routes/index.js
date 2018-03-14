@@ -2,8 +2,9 @@
 import CoreLayout from '../layouts/PageLayout/PageLayout'
 import AdminLayout from './../layouts/AdminLayout/AdminLayout'
 import NotLayout from './../layouts/NotLayout/NotLayout'
-import Home from './Home'
 import CounterRoute from './Counter'
+import Home from './Home'
+import Login from './Login'
 
 export const createRoutes = (store) => ([
   {
@@ -15,9 +16,9 @@ export const createRoutes = (store) => ([
     ]
   },
   {
-    path: '/login',
+    path: '/auth',
     component: NotLayout,
-    indexRoute: Home,
+    indexRoute: Login,
     childRoutes: [
       CounterRoute(store)
     ]

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Menu, Icon } from 'antd'
+import {Link, IndexLink} from 'react-router'
+import {Menu, Icon, Button} from 'antd'
 import './TopNav.scss'
 
 const SubMenu = Menu.SubMenu
@@ -15,37 +16,31 @@ class TopNav extends React.Component {
       current: e.key,
     })
   }
-  
-  render () {
+
+  render() {
     return (
-      <Menu
-        onClick={ this.handleClick }
-        selectedKeys={ [this.state.current] }
-        mode="horizontal"
-      >
-        <Menu.Item key="logo">
-          <Icon type="smile-o" /> Flask-react
-        </Menu.Item>
-        <Menu.Item key="mail">
-          <Icon type="mail"/>Navigation One
-        </Menu.Item>
-        <Menu.Item key="app" disabled>
-          <Icon type="appstore"/>Navigation Two
-        </Menu.Item>
-        <SubMenu title={ <span><Icon type="setting"/>Navigation Three - Submenu</span> }>
-          <MenuItemGroup title="Item 1">
-            <Menu.Item key="setting:1">Option 1</Menu.Item>
-            <Menu.Item key="setting:2">Option 2</Menu.Item>
-          </MenuItemGroup>
-          <MenuItemGroup title="Item 2">
-            <Menu.Item key="setting:3">Option 3</Menu.Item>
-            <Menu.Item key="setting:4">Option 4</Menu.Item>
-          </MenuItemGroup>
-        </SubMenu>
-        <Menu.Item key="alipay">
-          <a href="https://ant.design" target="_blank" rel="noopener noreferrer">Navigation Four - Link</a>
-        </Menu.Item>
-      </Menu>
+      <div className="container relative">
+        <Menu
+          onClick={this.handleClick}
+          selectedKeys={[this.state.current]}
+          mode="horizontal"
+        >
+          <Menu.Item key="logo">
+            <IndexLink to="/"><Icon type="smile-o"/>Flask-react</IndexLink>
+          </Menu.Item>
+          <Menu.Item key="github">
+            <a href="https://github.com/HuaRongSAO" target="_blank" rel="noopener noreferrer">
+              <i className="icon icon-GitHub"></i>GitHub
+            </a>
+          </Menu.Item>
+          <Menu.Item key="mail">
+            <a href="https://www.jianshu.com/u/54f00e4dcf6e" target="_blank" rel="noopener noreferrer">
+              <Icon type="database"/>blog
+            </a>
+          </Menu.Item>
+        </Menu>
+        <Button className="login-btn" type="danger" size="large"><Link to="/login"><Icon type="user-add"/> login</Link></Button>
+      </div>
     )
   }
 }

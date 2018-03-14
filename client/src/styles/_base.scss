@@ -10,3 +10,11 @@ For example:
 @import './variables/components';
 @import './themes/default';
 */
+.container {
+  max-width: 1366px;
+  margin: auto;
+}
+
+.relative {
+  position: relative;
+}

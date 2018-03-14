@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './PageLayout.scss'
 import { Layout } from 'antd'
 import TopNav from './../../components/TopNav'
+import './PageLayout.scss'
 
 const {Header, Footer, Content} = Layout
 
