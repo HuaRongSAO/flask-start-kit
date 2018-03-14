@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import { increment, doubleAsync } from '../modules/LoginModules'
+import { login, loginAsync } from '../modules/LoginModules'
 import LoginView from '../components/LoginView'
 
 const mapDispatchToProps = {
-  increment: () => increment(1),
-  doubleAsync
+  login,
+  loginAsync
 }
 
 const mapStateToProps = (state) => ({

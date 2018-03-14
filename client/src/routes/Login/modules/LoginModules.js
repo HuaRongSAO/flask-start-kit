@@ -1,16 +1,13 @@
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
-export const COUNTER_DOUBLE_ASYNC = 'COUNTER_DOUBLE_ASYNC'
+
+export const ASYNC_LOGIN = 'ASYNC_LOGIN'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function increment (value = 1) {
+export function login (user = {username: '', password: '', remember: true}) {
   return {
-    type: COUNTER_INCREMENT,
-    payload: value
+    type: ASYNC_LOGIN,
+    payload: user
   }
 }
 
@@ -18,31 +15,28 @@ export function increment (value = 1) {
     returns a function for lazy evaluation. It is incredibly useful for
     creating async actions, especially when combined with redux-thunk! */
 
-export const doubleAsync = () => {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch({
-          type: COUNTER_DOUBLE_ASYNC,
-          payload: getState().counter
-        })
-        resolve()
-      }, 200)
+export const loginAsync = () => {
+  return async (dispatch, getState) => {
+    const {data} = await api.get('/api/user')
+    console.log(data)
+    const user = getState().user
+    dispatch({
+      type: ASYNC_LOGIN,
+      payload: user
     })
   }
 }
 
 export const actions = {
-  increment,
-  doubleAsync
+  login,
+  loginAsync
 }
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT]: (state, action) => state + action.payload,
-  [COUNTER_DOUBLE_ASYNC]: (state, action) => state * 2
+  [ASYNC_LOGIN]: (state, action) => state + action.payload,
 }
 
 // ------------------------------------

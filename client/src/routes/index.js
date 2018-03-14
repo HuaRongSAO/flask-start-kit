@@ -16,9 +16,9 @@ export const createRoutes = (store) => ([
     ]
   },
   {
-    path: '/auth',
+    path: '/login',
     component: NotLayout,
-    indexRoute: Login,
+    indexRoute: Login(store),
     childRoutes: [
       CounterRoute(store)
     ]

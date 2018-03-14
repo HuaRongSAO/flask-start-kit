@@ -84,7 +84,7 @@ config.module.rules.push({
           },
         ],
         ['import', options]
-      
+
       ],
       presets: [
         'babel-preset-react',
@@ -151,7 +151,7 @@ config.plugins.push(extractStyles)
 // Images
 // ------------------------------------
 config.module.rules.push({
-  test: /\.(png|jpg|gif)$/,
+  test: /\.(png|jpg|gif|jpeg)$/,
   loader: 'url-loader',
   options: {
     limit: 8192,
@@ -170,7 +170,7 @@ config.module.rules.push({
 ].forEach((font) => {
   const extension = font[0]
   const mimetype = font[1]
-  
+
   config.module.rules.push({
     test: new RegExp(`\\.${extension}$`),
     loader: 'url-loader',
@@ -208,7 +208,7 @@ if (__DEV__) {
 // ------------------------------------
 if (!__TEST__) {
   const bundles = ['normalize', 'manifest']
-  
+
   if (project.vendors && project.vendors.length) {
     bundles.unshift('vendor')
     config.entry.vendor = project.vendors
