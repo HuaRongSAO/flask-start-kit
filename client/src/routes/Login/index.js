@@ -5,7 +5,7 @@ export default (store) => ({
     require.ensure([], (require) => {
       const Login = require('./containers/LoginContainer').default
       const reducer = require('./modules/LoginModules').default
-      injectReducer(store, {key: 'counter', reducer})
+      injectReducer(store, {key: 'user', reducer})
       cb(null, Login)
     }, 'login')
   }

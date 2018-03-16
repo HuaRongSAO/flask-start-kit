@@ -8,7 +8,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state) => ({
-  counter: state.counter
+  access_token: state.access_token
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginView)

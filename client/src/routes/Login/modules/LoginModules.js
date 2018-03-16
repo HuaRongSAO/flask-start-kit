@@ -1,29 +1,25 @@
-
-export const ASYNC_LOGIN = 'ASYNC_LOGIN'
+export const LOGIN = 'LOGIN'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function login (user = {username: '', password: '', remember: true}) {
+export function login (access_token) {
   return {
-    type: ASYNC_LOGIN,
-    payload: user
+    type: LOGIN,
+    payload: {access_token}
   }
 }
 
-/*  This is a thunk, meaning it is a function that immediately
-    returns a function for lazy evaluation. It is incredibly useful for
-    creating async actions, especially when combined with redux-thunk! */
-
-export const loginAsync = () => {
-  return async (dispatch, getState) => {
-    const {data} = await api.get('/api/user')
-    console.log(data)
-    const user = getState().user
-    dispatch({
-      type: ASYNC_LOGIN,
-      payload: user
-    })
+export const loginAsync = (user) => {
+  return (dispatch, getState) => {
+    async () => {
+      const {data} = await api.post('/api/auth', user)
+      localStorage.setItem('access_token', data.access_token)
+      dispatch({
+        type: LOGIN,
+        payload: data.access_token
+      })
+    }
   }
 }
 
@@ -36,13 +32,15 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [ASYNC_LOGIN]: (state, action) => state + action.payload,
+  [LOGIN]: (state, action) => (state.access_token = action.payload.access_token)
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = 0
+const initialState = {
+  access_token: ''
+}
 
 export default function loginReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

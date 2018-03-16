@@ -69,6 +69,7 @@ config.module.rules.push({
       plugins: [
         'babel-plugin-transform-class-properties',
         'babel-plugin-syntax-dynamic-import',
+        'babel-plugin-transform-decorators-legacy',
         [
           'babel-plugin-transform-runtime',
           {
