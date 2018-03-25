@@ -52,7 +52,6 @@ def register_extensions(app):
     def jwt_identity(payload):
         logging.info("payload:{}".format(payload))
         user_id = payload['identity']
-        # user = User.query.filter_by(id=user_id).first()
         user = UserAuth(user_id=user_id)
         return user
 

@@ -10,7 +10,7 @@ migrate = Migrate(app, mysql)
 
 
 manager.add_command('db', MigrateCommand)
-manager.add_command("showurls", ShowUrls())
+manager.add_command("url", ShowUrls())
 
 if __name__ == "__main__":
     manager.run()

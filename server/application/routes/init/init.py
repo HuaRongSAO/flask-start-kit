@@ -15,7 +15,7 @@ class Init(Resource):
         init_role()
         init_user()
         init_user_and_role()
-
+        
         return jsonify({'status': 'success', 'message': 'init成功'})
 
 
@@ -24,28 +24,23 @@ def init_promise():
             update_time=now_datetime()).save()
     Promise(url='/auth', desc='登入权限权限', method='POST', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/user', desc='查看用户权限', method='GET', create_time=now_datetime(),
+    Promise(url='/api/user', desc='查看用户权限', method='GET', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/user', desc='新增用户权限', method='POST', create_time=now_datetime(),
+    Promise(url='/api/user', desc='新增用户权限', method='POST', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/user', desc='修改用户权限', method='PUT', create_time=now_datetime(),
+    Promise(url='/api/user', desc='修改用户权限', method='PUT', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/user', desc='删除用户权限', method='DELETE', create_time=now_datetime(),
+    Promise(url='/api/user', desc='删除用户权限', method='DELETE', create_time=now_datetime(),
             update_time=now_datetime()).save()
 
 
 def init_role():
-    Role(name='admin', desc='管理员', promise_id=1, create_time=now_datetime(),
+    Role(name='super', desc='超级管理员', promise_id=1, create_time=now_datetime(),
          update_time=now_datetime()).save()
     Role(name='admin', desc='管理员', promise_id=2, create_time=now_datetime(),
          update_time=now_datetime()).save()
-    Role(name='admin', desc='管理员', promise_id=3, create_time=now_datetime(),
-         update_time=now_datetime()).save()
-
+    
     Role(name='user', desc='用户', promise_id=2, create_time=now_datetime(),
-         update_time=now_datetime()).save()
-
-    Role(name='auth', desc='验证', promise_id=2, create_time=now_datetime(),
          update_time=now_datetime()).save()
 
 
@@ -63,9 +58,7 @@ def init_user():
 def init_user_and_role():
     UserAndRole(user_id=1, role_id=1, create_time=now_datetime(),
                 update_time=now_datetime()).save()
-    UserAndRole(user_id=1, role_id=2, create_time=now_datetime(),
-                update_time=now_datetime()).save()
-    UserAndRole(user_id=1, role_id=3, create_time=now_datetime(),
-                update_time=now_datetime()).save()
     UserAndRole(user_id=2, role_id=2, create_time=now_datetime(),
+                update_time=now_datetime()).save()
+    UserAndRole(user_id=3, role_id=3, create_time=now_datetime(),
                 update_time=now_datetime()).save()

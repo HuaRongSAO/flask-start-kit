@@ -10,7 +10,7 @@ services:
     ports:
     - 3306:3306
   mongo:
-    image: mongo
+    image: mongo:3.2
     volumes:
     - './database/mongo:/data/db'
     ports:
