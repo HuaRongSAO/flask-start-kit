@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const LOGIN = 'LOGIN'
 
 // ------------------------------------
@@ -10,17 +12,12 @@ export function login (access_token) {
   }
 }
 
-export const loginAsync = (user) => {
-  return (dispatch, getState) => {
-    async () => {
-      const {data} = await api.post('/api/auth', user)
-      localStorage.setItem('access_token', data.access_token)
-      dispatch({
-        type: LOGIN,
-        payload: data.access_token
-      })
-    }
-  }
+export const loginAsync = (user) => async (dispatch, getState) => {
+  const {data, status} = await axios.post('/api/auth', user).catch(() => false)
+  if (status !== 200) return {status: false, msg: '用户或密码错误'}
+  localStorage.setItem('access_token', data)
+  dispatch(login(data))
+  return {status: true}
 }
 
 export const actions = {
@@ -32,14 +29,15 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [LOGIN]: (state, action) => (state.access_token = action.payload.access_token)
+  [LOGIN]: (state, action) => ({...state, access_token: action.payload.access_token})
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
-  access_token: ''
+  access_token: '',
+  status: true
 }
 
 export default function loginReducer (state = initialState, action) {

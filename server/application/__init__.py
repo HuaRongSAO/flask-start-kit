@@ -46,7 +46,7 @@ def register_extensions(app):
     def jwt_authenticate(username, password):
         logging.info("username:{}\npassword:{}\n".format(username, password))
         hash_password = hash_encrypt(password)
-        user = User.query.filter_by(username=username, password=hash_password).first()
+        user = User.query.filter_by(email=username, password=hash_password).first()
         return user
 
     def jwt_identity(payload):

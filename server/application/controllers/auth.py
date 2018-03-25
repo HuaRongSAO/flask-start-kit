@@ -1,7 +1,5 @@
 # encoding: utf-8
 from application.models import User, UserAndRole, Role, Promise
-from functional import seq
-
 
 def UserAuth(user_id=None):
     user = User.query.filter_by(id=user_id).first()

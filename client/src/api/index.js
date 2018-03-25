@@ -22,10 +22,10 @@ const createApi = () => {
     err => {
       const {status} = err.response
       if (status === 401) {
-        message.error('对不起,您没有权限访问!')
+        message.error('对不起,您没有权限访问')
       }
       if (status === 500) {
-        message.error('系统错误,请联系管理员!')
+        message.error('系统错误,请联系管理员')
       }
       return Promise.reject(err)
     })

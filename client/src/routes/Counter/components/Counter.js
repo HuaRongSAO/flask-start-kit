@@ -7,6 +7,7 @@ const getUser = async () => {
 
   console.log(user)
 }
+
 export const Counter = ({counter, increment, doubleAsync}) => (
   <div style={{margin: '0 auto'}}>
     <h2>Counter: {counter}</h2>
@@ -22,6 +23,7 @@ export const Counter = ({counter, increment, doubleAsync}) => (
     </button>
   </div>
 )
+
 Counter.propTypes = {
   counter: PropTypes.number.isRequired,
   increment: PropTypes.func.isRequired,
