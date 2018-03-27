@@ -37,18 +37,20 @@ class UserController(Resource):
         
         args = parser.parse_args()
         password = hash_encrypt(args['password'])
+        username = args['username']
+        email = args['email']
+        phone = args['phone']
         try:
-            user = User(username=args['username'], email=args['email'],
-                        phone=args['phone'], password=password).save()
+            user = user_controller.create_user(username=username, email=email,
+                                               phone=phone, password=password)
         except Exception as e:
             raise InvalidUsage(message='添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
-        return {'user': user.json}
+        return {'status': 'success', 'user': user.json}
 
 
 class UserInfo(Resource):
-    def get(self, query):
-        user = mysql.session.query(User).filter(
-            or_(User.id == query, User.username == query, User.email == query)).first()
+    def get(self, id):
+        user = user_controller.get_user_by_id(id)
         if not user:
             return jsonify({'status': 'fail', 'user': {}})
         user_json = {
@@ -101,5 +103,5 @@ class UserInfo(Resource):
         return jsonify({'status': 'success', 'user': user.json})
 
 
-api.add_resource(UserInfo, '/user/<string:query>', '/user/<string:id>')
+api.add_resource(UserInfo, '/user/<int:id>')
 api.add_resource(UserController, '/user')

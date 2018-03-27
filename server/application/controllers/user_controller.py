@@ -1,3 +1,4 @@
+import time
 from application.models import User
 
 
@@ -20,6 +21,7 @@ def get_user_count():
     return count
 
 
-def create_user():
-    user = User(username='', email='', phone='', password='').save()
+def create_user(username='', email='', phone='', password=''):
+    user = User(username=username, email=email, phone=phone, password=password,
+                create_time=time.time(), update_time=time.time()).save()
     return user
