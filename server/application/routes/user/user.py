@@ -10,22 +10,22 @@ from application.models.user import User
 from application.middleware import promise_required
 from application.util import InvalidUsage
 from application.extensions import mysql
+from application.controllers import user_controller
 
 
 class UserController(Resource):
-    @jwt_required()
-    @promise_required
+    # @jwt_required()
+    # @promise_required
     def get(self):
-        users = User.query.all()
+        count = user_controller.get_user_count()
+        users = user_controller.get_user_list(pageIndex=0, pageSize=10)
         users_json = []
         
         for user in users:
             users_json.append(user.json)
         return {
-            "user": current_identity.json if current_identity else {},
-            "promise_list": current_identity.promise_list if current_identity else {},
-            "roles": current_identity.roles_list,
-            'users': users_json
+            'count': count,
+            'list': users_json
         }
     
     def post(self):
