@@ -1,1 +1,1 @@
-from .promise_middleware import promise_required
+from .promise_middleware import promise_required,role_required

@@ -5,14 +5,14 @@ from flask_jwt import jwt_required, current_identity
 
 from application.util import hash_encrypt
 from application.routes import api
-from application.middleware import promise_required
+from application.middleware import promise_required,role_required
 from application.util import InvalidUsage
 from application.controllers import user_controller
 
 
 class UserController(Resource):
     # @jwt_required()
-    # @promise_required
+    @role_required(role='admin')
     def get(self):
         """ 获取用户列表 """
         count = user_controller.get_user_count()
