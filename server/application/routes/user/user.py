@@ -1,15 +1,12 @@
 # encoding: utf-8
-from flask import jsonify
-from sqlalchemy import or_
+from flask import jsonify, abort
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from application.util import hash_encrypt
 from application.routes import api
-from application.models.user import User
 from application.middleware import promise_required
 from application.util import InvalidUsage
-from application.extensions import mysql
 from application.controllers import user_controller
 
 
@@ -17,24 +14,28 @@ class UserController(Resource):
     # @jwt_required()
     # @promise_required
     def get(self):
+        """ 获取用户列表 """
         count = user_controller.get_user_count()
-        users = user_controller.get_user_list(pageIndex=0, pageSize=10)
+        users = user_controller.get_user_list(page_index=0, page_size=10)
         users_json = []
-        
+
         for user in users:
-            users_json.append(user.json)
+            user_json = user.json
+            del (user_json['password'])
+            users_json.append(user_json)
         return {
             'count': count,
             'list': users_json
         }
-    
+
     def post(self):
+        """ 新增用户 """
         parser = reqparse.RequestParser()
         parser.add_argument('username', required=True, help='username 必填选项')
         parser.add_argument('password', required=True, help='password 必填选项')
         parser.add_argument('email', required=True, help='email 必填选项')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
         password = hash_encrypt(args['password'])
         username = args['username']
@@ -42,66 +43,51 @@ class UserController(Resource):
         phone = args['phone']
         try:
             user = user_controller.create_user(username=username, email=email,
-                                               phone=phone, password=password)
+                                               phone=phone, password=password).json
         except Exception as e:
             raise InvalidUsage(message='添加用户失败', status_code=500, payload={'error': '{}'.format(e)})
-        return {'status': 'success', 'user': user.json}
+        del (user['password'])
+        return {'status': 'success', 'user': user}
 
 
 class UserInfo(Resource):
     def get(self, id):
-        user = user_controller.get_user_by_id(id)
+        """ 通过id获取用户信息 """
+        user = user_controller.get_user_by_id_or_name(id).json
         if not user:
-            return jsonify({'status': 'fail', 'user': {}})
-        user_json = {
-            "id": user.json["id"],
-            "email": user.json["email"],
-            "phone": user.json["phone"],
-            "username": user.json["username"],
-        }
-        return jsonify({'status': 'success', 'user': user_json})
-    
-    def put(self, query):
+            abort(404)
+        del (user['password'])
+        return jsonify({'status': 'success', 'user': user})
+
+    def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('username')
         parser.add_argument('password')
         parser.add_argument('email')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
-        print(args)
         username = args['username']
         password = args['password']
         email = args['email']
         phone = args['phone']
-        
-        user = User.query.filter(User.id == query).first()
-        if username != '':
-            user.username = username
-        if username != '':
-            user.password = password
-        if username != '':
-            user.email = email
-        if username != '':
-            user.phone = phone
         try:
-            mysql.session.merge(user)
-            mysql.session.commit()
+            user = user_controller.update_user(id=id, username=username, email=email,
+                                               phone=phone, password=password).json
         except Exception as e:
+            if (e.code == 404): raise e
             raise InvalidUsage(message='更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
-        return jsonify({'status': 'success', 'user': user.json})
-    
-    def delete(self, query):
-        user = User.query.filter(User.id == query).first()
-        if not user:
-            return jsonify({'status': 'fail', 'user': {}})
-        else:
-            try:
-                user.delete()
-            except Exception as e:
-                raise InvalidUsage(message='删除用户失败', status_code=500, payload={'error': '{}'.format(e)})
+        del (user['password'])
+        return jsonify({'status': 'success', 'user': user})
+
+    def delete(self, id):
+        try:
+            user = user_controller.delete_user_by_id(id)
+        except Exception as e:
+            if (e.code == 404): raise e
+            raise InvalidUsage(message='删除用户失败', status_code=500, payload={'error': '{}'.format(e)})
         return jsonify({'status': 'success', 'user': user.json})
 
 
-api.add_resource(UserInfo, '/user/<int:id>')
+api.add_resource(UserInfo, '/user/<int:id>', '/user/<string:id>')
 api.add_resource(UserController, '/user')

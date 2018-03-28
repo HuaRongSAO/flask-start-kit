@@ -6,3 +6,5 @@
 database
 server/migrations
 migrations
+client/node_modules/*
+**/node_modules

@@ -84,7 +84,7 @@ def exception_controller(app):
         return jsonify({'status': '404'})
 
     @app.errorhandler(500)
-    def page_not_found(error):
+    def page_error_handler(error):
         return jsonify({'status': '500'})
 
     @app.errorhandler(InvalidUsage)

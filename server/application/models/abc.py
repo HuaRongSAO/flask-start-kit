@@ -72,3 +72,4 @@ class BaseModel():
     def delete(self):
         mysql.session.delete(self)
         mysql.session.commit()
+        return self
