@@ -1,6 +1,7 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
+import { loadingBarMiddleware } from 'react-redux-loading-bar'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
 
@@ -30,6 +31,7 @@ const createStore = (initialState = {}) => {
     initialState,
     composeEnhancers(
       applyMiddleware(...middleware),
+      applyMiddleware(loadingBarMiddleware()),
       ...enhancers
     )
   )

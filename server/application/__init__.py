@@ -70,6 +70,7 @@ def register_extensions(app):
 
 
 def register_blueprint(app):
+    """ 注册蓝图 """
     for bp in all_bp:
         app.register_blueprint(bp)
 

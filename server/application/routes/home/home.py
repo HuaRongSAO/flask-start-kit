@@ -1,6 +1,6 @@
 # encoding: utf-8
 from flask_restful import Resource
-from application.routes import api, meta_fields
+from application.routes import api
 
 class HomeController(Resource):
     def get(self):

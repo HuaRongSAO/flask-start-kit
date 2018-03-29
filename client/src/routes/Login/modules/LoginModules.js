@@ -15,7 +15,7 @@ export function login (access_token) {
 export const loginAsync = (user) => async (dispatch, getState) => {
   const {data, status} = await axios.post('/api/auth', user).catch(() => false)
   if (status !== 200) return {status: false, msg: '用户或密码错误'}
-  localStorage.setItem('access_token', data)
+  localStorage.setItem('access_token', data['access_token'])
   dispatch(login(data))
   return {status: true}
 }

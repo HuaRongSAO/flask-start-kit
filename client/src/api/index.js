@@ -5,10 +5,15 @@ let api = null
 const createApi = () => {
   if (api) return
   api = axios.create({timeout: 5000})
-  api.options.headers = {'Content-Type': 'application/json;charset=UTF-8'}
+
   // 请求 拦截器
   api.interceptors.request.use(
     config => {
+      const accessToken = localStorage.getItem('access_token')
+      config.headers = {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `JWT ${accessToken}`
+      }
       return config
     },
     err => {

@@ -3,6 +3,7 @@ import { IndexLink, browserHistory } from 'react-router'
 import { Layout, Menu, Icon, Dropdown } from 'antd'
 import './AdminLayout.scss'
 import menu from './DropdownMune'
+
 const {Header, Sider, Content} = Layout
 
 class AdminLayout extends React.Component {
@@ -17,25 +18,25 @@ class AdminLayout extends React.Component {
   menuClick = ({item, key, keyPath}) => {
     browserHistory.push(`/admin/${key}`)
   }
-  
+
   render () {
     const {menuClick} = this
     return (
       <Layout>
         <Sider
-          trigger={ null }
+          trigger={null}
           collapsible
-          collapsed={ this.state.collapsed }
+          collapsed={this.state.collapsed}
         >
           <div className="logo">
             <IndexLink to="/admin">
               <i className="icon icon-aixin"></i>
               <span>后台管理系统</span>
             </IndexLink>
-          
+
           </div>
-          
-          <Menu theme="dark" onClick={ menuClick } mode="inline">
+
+          <Menu theme="dark" onClick={menuClick} mode="inline">
             <Menu.Item key="user">
               <Icon type="user"/>
               <span>用户管理</span>
@@ -51,20 +52,20 @@ class AdminLayout extends React.Component {
           </Menu>
         </Sider>
         <Layout>
-          <Header className="nav-header" style={ {background: '#fff', padding: 0} }>
+          <Header className="nav-header" style={{background: '#fff', padding: 0}}>
             <Icon
               className="trigger"
-              type={ this.state.collapsed ? 'menu-unfold' : 'menu-fold' }
-              onClick={ this.toggle }
+              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+              onClick={this.toggle}
             />
-            <Dropdown overlay={ menu } trigger={ ['click'] }>
+            <Dropdown overlay={menu} trigger={['click']}>
               <a className="ant-dropdown-link" href="javascript: void 0">
                 管理员 <Icon type="down"/>
               </a>
             </Dropdown>
           </Header>
-          <Content style={ {margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280} }>
-            { this.props.children }
+          <Content style={{margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280}}>
+            {this.props.children}
           </Content>
         </Layout>
       </Layout>

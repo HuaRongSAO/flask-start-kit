@@ -35,11 +35,8 @@ def init_promise():
 
 
 def init_role():
-    Role(name='super', desc='超级管理员', promise_id=1, create_time=now_datetime(),
+    Role(name='admin', desc='管理员', promise_id=1, create_time=now_datetime(),
          update_time=now_datetime()).save()
-    Role(name='admin', desc='管理员', promise_id=2, create_time=now_datetime(),
-         update_time=now_datetime()).save()
-    
     Role(name='user', desc='用户', promise_id=2, create_time=now_datetime(),
          update_time=now_datetime()).save()
 
@@ -47,8 +44,6 @@ def init_role():
 def init_user():
     User(username='admin', password=hash_encrypt('123456'), email='admin@flask.com', create_time=now_datetime(),
          update_time=now_datetime(), phone='18259261803').save()
-    User(username='super', password=hash_encrypt('123456'), email='super@flask.com', create_time=now_datetime(),
-         update_time=now_datetime(), phone='18259261801').save()
     User(username='user', password=hash_encrypt('123456'), email='user@flask.com', create_time=now_datetime(),
          update_time=now_datetime(), phone='18259261802').save()
     User(username='user1', password=hash_encrypt('123456'), email='user1@flask.com', create_time=now_datetime(),
@@ -60,5 +55,5 @@ def init_user_and_role():
                 update_time=now_datetime()).save()
     UserAndRole(user_id=2, role_id=2, create_time=now_datetime(),
                 update_time=now_datetime()).save()
-    UserAndRole(user_id=3, role_id=3, create_time=now_datetime(),
+    UserAndRole(user_id=3, role_id=2, create_time=now_datetime(),
                 update_time=now_datetime()).save()

@@ -1,24 +1,25 @@
 # encoding: utf-8
-from flask import jsonify, abort
+from flask import jsonify, abort, request
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 
 from application.util import hash_encrypt
 from application.routes import api
-from application.middleware import promise_required,role_required
+from application.middleware import promise_required, role_required
 from application.util import InvalidUsage
 from application.controllers import user_controller
 
 
 class UserController(Resource):
-    # @jwt_required()
-    @role_required(role='admin')
+    @jwt_required()
+    @role_required(role=['admin', 'user'])
     def get(self):
         """ 获取用户列表 """
         count = user_controller.get_user_count()
-        users = user_controller.get_user_list(page_index=0, page_size=10)
+        page_index = int(request.args.get('page_index') or 0)
+        page_size = int(request.args.get('page_size') or 10)
+        users = user_controller.get_user_list(page_index=page_index, page_size=page_size)
         users_json = []
-
         for user in users:
             user_json = user.json
             del (user_json['password'])
@@ -28,6 +29,8 @@ class UserController(Resource):
             'list': users_json
         }
 
+    @jwt_required()
+    @role_required(role=['admin'])
     def post(self):
         """ 新增用户 """
         parser = reqparse.RequestParser()
@@ -59,6 +62,8 @@ class UserInfo(Resource):
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
 
+    @jwt_required()
+    @role_required(role=['admin', 'user'])
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('username')
@@ -71,6 +76,7 @@ class UserInfo(Resource):
         password = args['password']
         email = args['email']
         phone = args['phone']
+        if current_identity.id != id and (not current_identity.is_admin): abort(401)
         try:
             user = user_controller.update_user(id=id, username=username, email=email,
                                                phone=phone, password=password).json
@@ -80,6 +86,8 @@ class UserInfo(Resource):
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
 
+    @jwt_required()
+    @role_required(role=['admin'])
     def delete(self, id):
         try:
             user = user_controller.delete_user_by_id(id)
