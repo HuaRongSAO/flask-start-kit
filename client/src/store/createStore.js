@@ -9,7 +9,7 @@ const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk]
+  const middleware = [thunk, loadingBarMiddleware()]
 
   // ======================================================
   // Store Enhancers
@@ -31,7 +31,6 @@ const createStore = (initialState = {}) => {
     initialState,
     composeEnhancers(
       applyMiddleware(...middleware),
-      applyMiddleware(loadingBarMiddleware()),
       ...enhancers
     )
   )

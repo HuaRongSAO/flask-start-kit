@@ -23,7 +23,7 @@ export const createRoutes = (store) => ([
     path: '/admin',
     component: AdminLayout,
     indexRoute: AdminHome,
-    onEnter: adminAuth,
+    onEnter: adminAuth(store),
     childRoutes: [
       AdminUser(store),
       AdminRole(store),
