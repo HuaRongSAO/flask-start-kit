@@ -28,7 +28,7 @@ class UserController(Resource):
             'count': count,
             'list': users_json
         }
-
+    
     @jwt_required()
     @role_required(role=['admin'])
     def post(self):
@@ -38,7 +38,7 @@ class UserController(Resource):
         parser.add_argument('password', required=True, help='password 必填选项')
         parser.add_argument('email', required=True, help='email 必填选项')
         parser.add_argument('phone')
-
+        
         args = parser.parse_args()
         password = hash_encrypt(args['password'])
         username = args['username']
@@ -61,7 +61,7 @@ class UserInfo(Resource):
             abort(404)
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
-
+    
     @jwt_required()
     @role_required(role=['admin', 'user'])
     def put(self, id):
@@ -70,7 +70,7 @@ class UserInfo(Resource):
         parser.add_argument('password')
         parser.add_argument('email')
         parser.add_argument('phone')
-
+        
         args = parser.parse_args()
         username = args['username']
         password = args['password']
@@ -85,7 +85,7 @@ class UserInfo(Resource):
             raise InvalidUsage(message='更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
-
+    
     @jwt_required()
     @role_required(role=['admin'])
     def delete(self, id):

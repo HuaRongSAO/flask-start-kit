@@ -8,3 +8,4 @@ api = Api(api_blueprint)
 # initialized
 from . import user  # NOQA
 from . import home  # NOQA
+from . import auth  # NOQA

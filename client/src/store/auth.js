@@ -22,11 +22,11 @@ export function auth (user) {
 // ------------------------------------
 // Specialized Action Creator
 // ------------------------------------
-export const updateAuth = ({dispatch}) => {
-  return user => dispatch(auth(user))
+export const updateAuth = user => {
+  return dispatch => dispatch(auth(user))
 }
-export const exitAuth = ({dispatch}) => {
-  return () => dispatch(exit())
+export const exitAuth = () => {
+  return dispatch => dispatch(exit())
 }
 
 // ------------------------------------

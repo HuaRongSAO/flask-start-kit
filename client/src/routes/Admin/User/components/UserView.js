@@ -1,11 +1,16 @@
 import React from 'react'
-import { Table, Icon, Divider } from 'antd'
+import { Tooltip, Table, Icon, Divider } from 'antd'
 
 const columns = [{
+  title: 'ID',
+  dataIndex: 'id',
+  key: 'id'
+}, {
   title: '用户名',
   dataIndex: 'username',
   key: 'username',
-  render: text => <a href="#">{text}</a>,
+  render: text => <Tooltip placement="top" title={ text }>
+    <a href="javascript:void 0">{ text }</a></Tooltip>,
 }, {
   title: '手机',
   dataIndex: 'phone',
@@ -34,13 +39,13 @@ class UserView extends React.Component {
   componentWillMount () {
     this.props.getUsers()
   }
-
+  
   render () {
     const {list} = this.props.users
     return (
       <div className="admin-user">
         <h2>用户管理 <Icon type="user"/></h2>
-        <Table columns={columns} dataSource={list} />
+        <Table columns={ columns } dataSource={ list } rowKey={ 'id' }/>
       </div>
     )
   }

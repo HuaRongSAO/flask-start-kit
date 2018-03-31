@@ -4,7 +4,7 @@ from flask import Flask, current_app, jsonify, request
 from datetime import datetime
 from config import load_config
 from application.blueprints import all_bp
-from application.extensions import login_manager, jwt, mongo, mysql, api
+from application.extensions import login_manager, jwt, mongo, mysql
 from application.models import User
 from application.util import InvalidUsage, hash_encrypt
 from application.controllers import UserAuth

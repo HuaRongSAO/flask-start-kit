@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { message } from 'antd'
-
+import { browserHistory } from 'react-router'
 let api = null
 const createApi = () => {
   if (api) return
@@ -28,6 +28,7 @@ const createApi = () => {
       const {status} = err.response
       if (status === 401) {
         message.error('对不起,您没有权限访问')
+        browserHistory.push('/login')
       }
       if (status === 500) {
         message.error('系统错误,请联系管理员')

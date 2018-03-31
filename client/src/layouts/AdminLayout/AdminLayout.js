@@ -2,7 +2,8 @@ import React from 'react'
 import { IndexLink, browserHistory } from 'react-router'
 import { Layout, Menu, Icon, Dropdown } from 'antd'
 import './AdminLayout.scss'
-import menu from './DropdownMune'
+import { exitAuth } from './../../store/auth'
+import { connect } from 'react-redux'
 
 const {Header, Sider, Content} = Layout
 
@@ -18,25 +19,47 @@ class AdminLayout extends React.Component {
   menuClick = ({item, key, keyPath}) => {
     browserHistory.push(`/admin/${key}`)
   }
-
+  
+  menuClickItem = ({item, key, keyPath}) => {
+    if (key === '/admin/layout') {
+      this.props.exitAuth()
+      browserHistory.push('/login')
+      localStorage.removeItem('access_token')
+      return
+    }
+    browserHistory.push(`${key}`)
+  }
+  
   render () {
-    const {menuClick} = this
+    const {menuClick, menuClickItem} = this
+    const menu = (
+      <Menu onClick={ menuClickItem }>
+        <Menu.Item key="/admin/center">
+          <a>个人中心</a>
+        </Menu.Item>
+         <Menu.Item key="/">
+          <a>返回首页</a>
+        </Menu.Item>
+        <Menu.Divider/>
+        <Menu.Item key="/admin/layout">退出</Menu.Item>
+      </Menu>
+    )
     return (
       <Layout>
         <Sider
-          trigger={null}
+          trigger={ null }
           collapsible
-          collapsed={this.state.collapsed}
+          collapsed={ this.state.collapsed }
         >
           <div className="logo">
             <IndexLink to="/admin">
               <i className="icon icon-aixin"></i>
               <span>后台管理系统</span>
             </IndexLink>
-
+          
           </div>
-
-          <Menu theme="dark" onClick={menuClick} mode="inline">
+          
+          <Menu theme="dark" onClick={ menuClick } mode="inline">
             <Menu.Item key="user">
               <Icon type="user"/>
               <span>用户管理</span>
@@ -52,20 +75,20 @@ class AdminLayout extends React.Component {
           </Menu>
         </Sider>
         <Layout>
-          <Header className="nav-header" style={{background: '#fff', padding: 0}}>
+          <Header className="nav-header" style={ {background: '#fff', padding: 0} }>
             <Icon
               className="trigger"
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
+              type={ this.state.collapsed ? 'menu-unfold' : 'menu-fold' }
+              onClick={ this.toggle }
             />
-            <Dropdown overlay={menu} trigger={['click']}>
+            <Dropdown overlay={ menu } trigger={ ['click'] }>
               <a className="ant-dropdown-link" href="javascript: void 0">
                 管理员 <Icon type="down"/>
               </a>
             </Dropdown>
           </Header>
-          <Content style={{margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280}}>
-            {this.props.children}
+          <Content style={ {margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280} }>
+            { this.props.children }
           </Content>
         </Layout>
       </Layout>
@@ -73,4 +96,9 @@ class AdminLayout extends React.Component {
   }
 }
 
-export default AdminLayout
+const mapDispatchToProps = {
+  exitAuth
+}
+
+const mapStateToProps = (state) => ({})
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLayout)
