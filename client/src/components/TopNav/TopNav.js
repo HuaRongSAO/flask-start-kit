@@ -1,6 +1,7 @@
 import React from 'react'
-import {Link, IndexLink} from 'react-router'
-import {Menu, Icon, Button} from 'antd'
+import { Link, IndexLink } from 'react-router'
+import { connect } from 'react-redux'
+import { Menu, Icon, Button } from 'antd'
 import './TopNav.scss'
 
 const SubMenu = Menu.SubMenu
@@ -17,7 +18,11 @@ class TopNav extends React.Component {
     })
   }
 
-  render() {
+  render () {
+    const {topNav: {load, username}} = this.props
+    const Login = <Button className="login-btn" type="danger" size="large"><Link to="/login">
+      <Icon type="user-add"/>login</Link></Button>
+    const User = <Link className="user-info" to="/center">{username}</Link>
     return (
       <div className="container relative">
         <Menu
@@ -39,10 +44,12 @@ class TopNav extends React.Component {
             </a>
           </Menu.Item>
         </Menu>
-        <Button className="login-btn" type="danger" size="large"><Link to="/login"><Icon type="user-add"/> login</Link></Button>
+        {this.props.topNav.load ? User : Login}
       </div>
     )
   }
 }
 
-export default TopNav
+const mapDispatchToProps = {}
+const mapStateToProps = (state) => ({topNav: state.auth.user})
+export default connect(mapStateToProps, mapDispatchToProps)(TopNav)

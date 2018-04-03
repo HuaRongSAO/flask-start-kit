@@ -20,13 +20,12 @@ import AdminRole from './Admin/Role'
 import NotFound from './Admin/NotFound'
 
 export const createRoutes = (store) => {
-  if (!localStorage.getItem('access_token')) browserHistory.replace('/login')
   return [
     {
       path: '/admin',
       component: AdminLayout,
       indexRoute: AdminHome,
-      onEnter: adminAuth,
+      onEnter: adminAuth(store),
       childRoutes: [
         AdminUser(store),
         AdminRole(store),

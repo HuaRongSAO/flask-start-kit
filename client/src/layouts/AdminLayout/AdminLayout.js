@@ -19,7 +19,7 @@ class AdminLayout extends React.Component {
   menuClick = ({item, key, keyPath}) => {
     browserHistory.push(`/admin/${key}`)
   }
-  
+
   menuClickItem = ({item, key, keyPath}) => {
     if (key === '/admin/layout') {
       this.props.exitAuth()
@@ -29,7 +29,7 @@ class AdminLayout extends React.Component {
     }
     browserHistory.push(`${key}`)
   }
-  
+
   render () {
     const {menuClick, menuClickItem} = this
     const menu = (
@@ -56,9 +56,9 @@ class AdminLayout extends React.Component {
               <i className="icon icon-aixin"></i>
               <span>后台管理系统</span>
             </IndexLink>
-          
+
           </div>
-          
+
           <Menu theme="dark" onClick={ menuClick } mode="inline">
             <Menu.Item key="user">
               <Icon type="user"/>
