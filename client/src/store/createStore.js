@@ -1,10 +1,8 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
-import { loadingBarMiddleware } from 'react-redux-loading-bar'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import promiseMiddleware from 'redux-promise-middleware'
 const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration

@@ -1,6 +1,5 @@
 // We only need to import the modules necessary for initial render
 // auth
-import { browserHistory } from 'react-router'
 import { adminAuth } from './auth'
 
 // layout

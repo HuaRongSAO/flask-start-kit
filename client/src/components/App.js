@@ -2,8 +2,6 @@ import React from 'react'
 import { browserHistory, Router } from 'react-router'
 import { Provider, connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { updateAuth, exitAuth } from './../store/auth'
-
 class App extends React.Component {
   static PropTypes = {
     store: PropTypes.object.isRequired,
@@ -12,14 +10,6 @@ class App extends React.Component {
 
   shouldComponentUpdate () {
     return false
-  }
-
-  componentWillMount = async () => {
-    const {exitAuth, updateAuth} = this.props
-    const accessToken = localStorage.getItem('access_token')
-    if (!accessToken) return exitAuth()
-    const {data} = await api.get('/api/auth/login')
-    updateAuth(data)
   }
 
   render () {
@@ -33,6 +23,4 @@ class App extends React.Component {
   }
 }
 
-const mapDispatchToProps = {updateAuth, exitAuth}
-const mapStateToProps = (state) => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App

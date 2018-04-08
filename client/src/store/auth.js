@@ -18,6 +18,13 @@ export function auth (user) {
     payload: {user}
   }
 }
+// 初始化用户登入
+export const initUser = async (store) => {
+  const accessToken = localStorage.getItem('access_token')
+  if (!accessToken) return store.dispatch(exitAuth())
+  const {data} = await api.get('/api/auth/login')
+  store.dispatch(updateAuth(data))
+}
 
 // ------------------------------------
 // Specialized Action Creator

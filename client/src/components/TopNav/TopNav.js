@@ -19,10 +19,10 @@ class TopNav extends React.Component {
   }
 
   render () {
-    const {topNav: {load, username}} = this.props
+    const {topNav: {load, username, is_admin}} = this.props
     const Login = <Button className="login-btn" type="danger" size="large"><Link to="/login">
       <Icon type="user-add"/>login</Link></Button>
-    const User = <Link className="user-info" to="/center">{username}</Link>
+    const User = <Link className="user-info" to={is_admin ? '/admin' : '/center'}>{username}</Link>
     return (
       <div className="container relative">
         <Menu
@@ -44,7 +44,7 @@ class TopNav extends React.Component {
             </a>
           </Menu.Item>
         </Menu>
-        {this.props.topNav.load ? User : Login}
+        {load ? User : Login}
       </div>
     )
   }

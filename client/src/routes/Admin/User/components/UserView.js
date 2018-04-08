@@ -1,6 +1,8 @@
 import React from 'react'
-import { Tooltip, Table, Icon, Divider, Button, Modal } from 'antd'
+import { Tooltip, Table, Icon, Divider, Button } from 'antd'
+import UserModal from './UserModal'
 import './UserView.scss'
+
 const columns = [{title: 'ID', dataIndex: 'id', key: 'id'},
   {
     title: '用户名', dataIndex: 'username', key: 'username',
@@ -27,13 +29,13 @@ class UserView extends React.Component {
       visible: true,
     })
   }
-  handleOk = (e) => {
+  handleCancel = (e) => {
     console.log(e)
     this.setState({
       visible: false,
     })
   }
-  handleCancel = (e) => {
+  handleOk = () => {
     console.log(e)
     this.setState({
       visible: false,
@@ -42,22 +44,8 @@ class UserView extends React.Component {
 
   render () {
     const {list} = this.props.users
-    const {showModal, handleCancel, handleOk} = this
-    const {loading} = this.state
-    const AddModel = (
-      <Modal title="添加新用户" className="admin-user__model" visible={this.state.visible} width="50%"
-             onOk={handleOk} onCancel={handleCancel}
-             footer={[
-               <Button key="back" onClick={handleCancel}>取消</Button>,
-               <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-                 添加新用户
-               </Button>,
-             ]}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
-    )
+    const {visible, loading} = this.state
+    const {showModal, handleCancel,handleOk} = this
     return (
       <div className="admin-user">
         <div className="table-head">
@@ -65,7 +53,7 @@ class UserView extends React.Component {
           <Button onClick={showModal} type="dashed" className="table-add"><Icon type="plus-circle-o"/>新增用户</Button>
         </div>
         <Table columns={columns} dataSource={list} rowKey={'id'}/>
-        {AddModel}
+        <UserModal handleCancel={handleCancel} handleOk={handleOk} visible={visible} loading={loading}/>
       </div>
     )
   }
