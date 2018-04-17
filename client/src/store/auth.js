@@ -7,6 +7,7 @@ export const AUTH = 'AUTH'
 // Actions
 // ------------------------------------
 export function exit () {
+  localStorage.setItem('access_token', '')
   return {
     type: EXIT
   }
@@ -18,12 +19,13 @@ export function auth (user) {
     payload: {user}
   }
 }
+
 // 初始化用户登入
 export const initUser = async (store) => {
   const accessToken = localStorage.getItem('access_token')
-  if (!accessToken) return store.dispatch(exitAuth())
-  const {data} = await api.get('/api/auth/login')
-  store.dispatch(updateAuth(data))
+  if (!accessToken) return store.dispatch(exit())
+  const {data} = await api.get('/api/auth/login').catch(() => { return store.dispatch(exit()) })
+  store.dispatch(auth(data))
 }
 
 // ------------------------------------

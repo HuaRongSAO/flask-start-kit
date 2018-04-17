@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const getUser = async () => {
    console.log('click')
-  const user = await fetch('/api/user')
+  const user = await fetch('/api/users')
 
   console.log(user)
 }

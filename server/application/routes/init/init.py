@@ -24,13 +24,13 @@ def init_promise():
             update_time=now_datetime()).save()
     Promise(url='/auth', desc='登入权限权限', method='POST', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/api/user', desc='查看用户权限', method='GET', create_time=now_datetime(),
+    Promise(url='/api/users', desc='查看用户权限', method='GET', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/api/user', desc='新增用户权限', method='POST', create_time=now_datetime(),
+    Promise(url='/api/users', desc='新增用户权限', method='POST', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/api/user', desc='修改用户权限', method='PUT', create_time=now_datetime(),
+    Promise(url='/api/users', desc='修改用户权限', method='PUT', create_time=now_datetime(),
             update_time=now_datetime()).save()
-    Promise(url='/api/user', desc='删除用户权限', method='DELETE', create_time=now_datetime(),
+    Promise(url='/api/users', desc='删除用户权限', method='DELETE', create_time=now_datetime(),
             update_time=now_datetime()).save()
 
 

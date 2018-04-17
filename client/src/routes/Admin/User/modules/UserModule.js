@@ -5,15 +5,20 @@ export const ASYNC_USERS = 'ASYNC_USERS'
 // ------------------------------------
 
 export const getUsers = (page_index = 0, page_size = 10) => async (dispatch, getState) => {
-  const {data} = await api.get('/api/user').catch(() => false)
+  const {data} = await api.get('/api/users').catch(() => false)
   dispatch({
     type: ASYNC_USERS,
     payload: data
   })
 }
 
+export const addUser = user => async (dispatch, getState) => {
+  const {data} = await api.post('/api/users', user).catch(err => { throw err})
+  return data
+}
 export const actions = {
-  getUsers
+  getUsers,
+  addUser
 }
 
 // ------------------------------------

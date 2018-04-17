@@ -1,9 +1,10 @@
 import { connect } from 'react-redux'
-import { getUsers } from './../modules/UserModule'
+import { getUsers,addUser } from './../modules/UserModule'
 import UserView from './../components/UserView'
 
 const mapDispatchToProps = {
-  getUsers
+  getUsers,
+  addUser
 }
 
 const mapStateToProps = state => ({

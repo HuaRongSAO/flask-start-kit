@@ -16,7 +16,7 @@ class LoginView extends React.Component {
     },
     load: false
   }
-  
+
   handleSubmit = async (e) => {
     e.preventDefault()
     this.setState({load: true})
@@ -36,7 +36,7 @@ class LoginView extends React.Component {
     message.success('登入成功')
     browserHistory.push('/admin')
   }
-  
+
   @autobind
   onChange (e, target) {
     const user = this.state.user
@@ -44,8 +44,8 @@ class LoginView extends React.Component {
     this.setState({user})
     this.regRule(target)
   }
-  
-  regRule (target) {
+
+  async regRule (target) {
     const user = this.state.user
     if (target === 'email') {
       const reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
@@ -55,6 +55,7 @@ class LoginView extends React.Component {
         this.setState({user})
         return false
       }
+      const result = api.get()
       user.email.status = 'success'
       user.email.message = ''
     }
@@ -71,14 +72,14 @@ class LoginView extends React.Component {
     this.setState({user})
     return true
   }
-  
+
   @autobind
   checkboxChange (e) {
     const user = this.state.user
     user.remember = e.target.checked
     this.setState({user})
   }
-  
+
   render () {
     const {onChange, checkboxChange} = this
     const {user: {email, password, remember}, load} = this.state
@@ -88,7 +89,7 @@ class LoginView extends React.Component {
           <img src={ LoginImg } className="login-img"/>
           <h1>{ remember }</h1>
           <Form onSubmit={ this.handleSubmit }>
-            
+
             <FormItem hasFeedback
                       validateStatus={ email.status } help={ email.message }>
               <Input prefix={ <Icon type="user" style={ {color: 'rgba(0,0,0,.25)'} }/> }
@@ -101,7 +102,7 @@ class LoginView extends React.Component {
                      onChange={ e => {onChange(e, 'password')} }
                      placeholder="Password" value={ password.value }/>
             </FormItem>
-            
+
             <FormItem>
               <Checkbox defaultChecked={ true } onChange={ checkboxChange }>Remember me</Checkbox>
               <Button loading={ load } type="primary" htmlType="submit" className="login-form-button">
@@ -112,7 +113,7 @@ class LoginView extends React.Component {
                 <a href="">register now!</a>
               </p>
             </FormItem>
-          
+
           </Form>
         </div>
       </div>

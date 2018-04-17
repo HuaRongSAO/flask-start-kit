@@ -62,3 +62,29 @@ def delete_user_by_id_and_name(id):
     user = User.query.filter(or_(User.id.like(id), User.username.like(id))).first_or_404()
     user.delete()
     return user
+
+
+def check_username(username):
+    """ 校验 username """
+    user = User.query.filter_by(username=username).first()
+    if not user: return False
+    return True
+
+
+def check_phone(phone):
+    """ 校验 phone """
+    user = User.query.filter_by(phone=phone).first()
+    if not user: return False
+    return True
+
+
+def check_email(email):
+    """ 校验 phone """
+    user = User.query.filter_by(email=email).first()
+    if not user: return False
+    return True
+def check_user(key='', value=''):
+    """ 校验 字段 """
+    user = User.query.filter(User[key].like(value))
+    if not user: return False
+    return True

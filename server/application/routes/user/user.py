@@ -28,7 +28,7 @@ class UserController(Resource):
             'count': count,
             'list': users_json
         }
-    
+
     @jwt_required()
     @role_required(role=['admin'])
     def post(self):
@@ -38,7 +38,7 @@ class UserController(Resource):
         parser.add_argument('password', required=True, help='password 必填选项')
         parser.add_argument('email', required=True, help='email 必填选项')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
         password = hash_encrypt(args['password'])
         username = args['username']
@@ -61,7 +61,7 @@ class UserInfo(Resource):
             abort(404)
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
-    
+
     @jwt_required()
     @role_required(role=['admin', 'user'])
     def put(self, id):
@@ -70,7 +70,7 @@ class UserInfo(Resource):
         parser.add_argument('password')
         parser.add_argument('email')
         parser.add_argument('phone')
-        
+
         args = parser.parse_args()
         username = args['username']
         password = args['password']
@@ -85,7 +85,7 @@ class UserInfo(Resource):
             raise InvalidUsage(message='更新用户失败', status_code=500, payload={'error': '{}'.format(e)})
         del (user['password'])
         return jsonify({'status': 'success', 'user': user})
-    
+
     @jwt_required()
     @role_required(role=['admin'])
     def delete(self, id):
@@ -97,5 +97,21 @@ class UserInfo(Resource):
         return jsonify({'status': 'success', 'user': user.json})
 
 
-api.add_resource(UserInfo, '/user/<int:id>', '/user/<string:id>')
-api.add_resource(UserController, '/user')
+class CheckUser(Resource):
+    def get(self):
+        key = request.args.get('key')
+        value = request.args.get('value')
+        exit = None
+        if key == 'phone':
+            exit = user_controller.check_phone(value)
+        if key == 'username':
+            exit = user_controller.check_username(value)
+        if key == 'email':
+            exit = user_controller.check_email(value)
+        if exit is None: raise InvalidUsage(message='查询失败', status_code=500, payload={'error': 'key错误'})
+        return jsonify({'status': 'success', 'exit': exit, 'msg': '不可用,系统已经存在相关信息' if exit else '可用,系统无相关信息'})
+
+
+api.add_resource(CheckUser, '/users/check')
+api.add_resource(UserInfo, '/users/<int:id>', '/users/<string:id>')
+api.add_resource(UserController, '/users')
